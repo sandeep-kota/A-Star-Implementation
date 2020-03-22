@@ -65,3 +65,51 @@ class Map:
 
                 if ((i+j-(100+(r+c)))<=0) and ((i+13*j-(340-(r+c)))>=0) and ((i-1.4*j+(90+(r+c)))>=0) and (i-(15-(r+c))>=0):
                     self.anim[i,j]=255  
+
+
+    def isObstacle(self,j,i):
+        """
+        Determines if obstacle using half-plane equations.
+    
+        :param      j:    x-coordinate
+        :type       j:    flloat
+        :param      i:    y-coordinate
+        :type       i:    float
+    
+        :returns:   True if obstacle, False otherwise.
+        :rtype:     boolean
+        """
+        r=self.radius
+        c=self.clearence
+   
+        obstacle = False
+        
+        if ((j>=0) and (j<=(r+c))) or (j>=(300-(r+c)) and (j<=300)) or ((i>=0) and (i<=(r+c))) or ((i>=200-(r+c)) and (i<=200)):
+            obstacle = True 
+        
+        # Circle
+        if ((j-225)**2 + (i-50)**2 <= ((25+r+c)**2)):
+            # b[i,j]=255
+            obstacle = True
+
+        # Diamond
+        if ((0.6*j+i-(295-(r+c)))>=0) and ((0.6*j+i-(325+(r+c)))<=0) and ((-0.6*j+i-(25-(r+c)))>=0) and ((-0.6*j+i-(55+(r+c)))<=0):
+            obstacle = True
+
+
+        # Eclipse
+        if (((j-150)/(40+r+c))**2 + ((i-100)/(20+r+c))**2 <= 1   ):
+            obstacle = True
+
+        # Line
+        if ((i-0.58*j-(115.15+(r+c)))<=0)  and ((i-0.58*j-(103.6-(r+c)))>=0) and ((i+1.73*j-(184.55-(r+c)))>=0) and ((i+1.73*j-(334.55+(r+c)))<=0):
+            obstacle = True
+
+        # Right Poly
+        if ((i-(15-(r+c))>=0)) and ((i-1.4*j+(90+(r+c)))>=0) and ((i+1.2*j-(170+(r+c)))<=0) and ((i-1.2*j+(10-(r+c)))<=0) and ((i+13*j-(340-(r+c)))>0):
+            obstacle = True
+
+        if ((i+j-(100+(r+c)))<=0) and ((i+13*j-(340-(r+c)))>=0) and ((i-1.4*j+(90+(r+c)))>=0) and (i-(15-(r+c))>=0):
+            obstacle = True
+
+        return obstacle
