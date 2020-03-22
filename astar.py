@@ -113,3 +113,61 @@ class Map:
             obstacle = True
 
         return obstacle
+        
+    def cost(self,node,step_cost):
+        """
+        Returns 
+    
+        :param      node:       The node at which the cost is to be obtained 
+        :type       node:       List
+        :param      step_cost:  The step cost to reach that node from start node
+        :type       step_cost:  int
+    
+        :returns:   Heuristic cost for A*
+        :rtype:     float
+        """
+        return(step_cost + np.linalg.norm(np.array(node[0:2])-np.array(self.goal[0:2])))
+
+
+    def actionsAvailable(self,x,y,theta,step_cost):
+        """
+        Returns 5 actions available at the given nodes 
+    
+        :param      x:          The current node x
+        :type       x:          float
+        :param      y:          The current node y
+        :type       y:          float
+        :param      theta:      The theta
+        :type       theta:      Int in range (0,12)
+        :param      step_cost:  The step cost
+        :type       step_cost:  Int
+        """
+        for i in range(0,5):
+            i = 4-i
+
+            # Check the states at -60, -30, 0, 30, 60
+            xn = (x+(self.step_size*np.sin((theta+i-2)*np.pi/6)))
+            yn = (y+(self.step_size*np.cos((theta+i-2)*np.pi/6)))
+            
+            # Edit the states -1, -2, etc to 11, 10, etc so on
+            alpha = theta+i-2
+            if alpha <0:
+                alpha = alpha +12
+            # Edit the states 13, 14, etc to 1, 2, etc so on
+            if alpha >11:
+                alpha = alpha-12
+
+            # Check obstacle condition for the explored nodes 
+            if self.isObstacle(xn,yn) == False:
+
+                # Check already visited condition for explored nodes 
+                if (np.sum(self.visited_map[int(round(yn*2)),int(round(xn*2)),:]))==0:
+                    self.visited_map[int(round(yn*2)),int(round(xn*2)),alpha]=1
+                    self.anim[int(yn),int(xn)]=[255,0,0]
+                    self.queue.append([self.cost((xn,yn),step_cost),xn,yn,alpha,step_cost+2,x,y ])
+                    heapq.heapify(self.queue)
+
+                elif (np.sum(self.visited_map[int(round(yn*2)),int(round(xn*2)),:]))>0:
+                    pass
+
+        # print("-------")
