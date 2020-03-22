@@ -243,4 +243,60 @@ class Map:
                 break
             # cv2.waitKey()
         self.out.release()
+
+def cart2img(node):
+    return [node[0],(200-node[1]),int(node[2]/30)]
+
+
+def main():
+    # start = [50,30,60]
+    # goal = [150,150,60]
+    start = []
+    print("Start node in the format [x,y,theta] (Press enter after passing each element):")
+    for i in range(0,3):
+        x = input()
+        start.append(int(x))
+
+    goal = []
+    print("Goal node in the format [x,y,theta] (Press enter after passing each element):")
+    for i in range(0,3):
+        x = input()
+        goal.append(int(x))
+
+    radius = input("Radius of the robot as integer :")
+    radius = int(radius)
+    clearence = input("Clearnece of the robot as integer :")
+    clearence = int(clearence)
+    step_size = input ("Step size :")    
+    step_size = int(step_size)
+    start = cart2img(start)
+    goal = cart2img(goal)
+
+    # start = [50,170,2]
+    # goal = [150,50,1]
+    print("Start: ",start)
+    print("Goal: ",goal)
+    print("Clearnece",type(clearence))
+    print("Radius",type(radius))
+
+    m = Map(start,goal,radius,clearence,step_size)
+
+    if m.isObstacle(start[0],start[1]):
+        print("ERROR! Start Node is in the obstacle!")
+        sys.exit()
+    if m.isObstacle(goal[0],goal[1]):
+        print("ERROR! Goal Node is in the obstacle!")
+        sys.exit()
+    if (start[0] < 0) or (start[0] > 300) or (start[1]<0) or (start[1]>200):
+        print("ERROR! Start Node out of bounds")
+        sys.exit()
+    if (goal[0] < 0) or (goal[0] > 300) or (goal[1]<0) or (goal[1]>200):
+        print("ERROR! Goal Node out of bounds")
+        sys.exit()
+
+
+    m.astar()
+
+if __name__ == "__main__":
+    main()
         
