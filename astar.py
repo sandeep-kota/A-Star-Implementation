@@ -205,3 +205,42 @@ class Map:
                     # print("Found at ",i)
                     j = n-1-i
         self.out.release()
+
+    def astar(self):
+        """
+        A Star Alorithm
+        """
+        heapq.heapify(self.queue)
+        heapq.heappush(self.queue,[self.cost(self.start[:2],0),self.start[0],self.start[1],self.start[2],0,self.start[0],self.start[1]])
+        while True:
+
+            # Pop the element with least cost
+            current = heapq.heappop(self.queue)
+            self.visited.append(current)
+            # print("current_node", np.array(current))
+
+            # Check Goal Condition
+            if np.linalg.norm(np.array(current[1:3])- np.array(self.goal[0:2])) <= 3 :
+                print("Goal Reached! ")
+                # print("Visited" , np.array(self.visited))
+                # cv2.imshow("Animation :",self.anim)
+                # cv2.waitKey()
+                 
+                # Perform backtracking
+                self.backtrack()
+                break 
+
+            # Search for the available actions in the popped element of the queue
+            self.actionsAvailable(current[1],current[2],current[3],current[4])
+            print("|________________|")  
+
+            # Represent that node in the animation map
+            self.anim[int(round(current[2])),int(round(current[1]))]= [0,255,0]
+            # cv2.imshow("Animation :",self.anim)
+            self.out.write(self.anim)
+            
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            # cv2.waitKey()
+        self.out.release()
+        
