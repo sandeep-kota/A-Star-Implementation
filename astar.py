@@ -171,3 +171,37 @@ class Map:
                     pass
 
         # print("-------")
+
+    def backtrack(self):
+        n= len(self.visited)
+        parent = []
+        j = 0
+        print("Backtracking")
+        # print(np.array(self.visited))
+        self.shortest_path.append([self.goal[0],self.goal[1]])
+        while(True):
+            popped = self.visited[n-1-j]
+            current_node = [popped[1],popped[2]]
+            parent_node = [popped[-2],popped[-1]]
+            # print("Current Node :",current_node)
+            # print("Parent Node :",parent_node)
+            parent.append(parent_node)
+            self.anim[int(parent_node[1]),int(parent_node[0])]=[0,0,255]
+            self.shortest_path.append([parent_node[0],200-parent_node[1]])
+            if list(current_node) == [self.start[0],self.start[1]]:
+                break
+            # cv2.imshow("Anim",self.anim)
+            self.out.write(self.anim)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            
+            # Extract the explored nodes columns of the queue
+            cp = np.array(self.visited)[:,1:3]
+            # print("CP: ", np.array(cp)[9])
+
+            # Return the index of the parent node in the explored node columns of the queue
+            for i in range(0,cp.shape[0]):
+                if (cp[i][0]==parent_node[0]) and (cp[i][1]==parent_node[1]):
+                    # print("Found at ",i)
+                    j = n-1-i
+        self.out.release()
